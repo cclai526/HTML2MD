@@ -1,5 +1,5 @@
 {
-    "name": "@my-project/extension",
+    "name": "@html2md/extension",
     "version": "1.0.0",
     "type": "module",
     "scripts": {
@@ -7,7 +7,7 @@
         "build": "vite build"
     },
     "dependencies": {
-        "@my-project/core": "workspace:*"
+        "@html2md/core": "workspace:*"
     },
     "devDependencies": {
         "vite": "^6.2.0"

@@ -1,5 +1,5 @@
 {
-    "name": "@my-project/cli",
+    "name": "@html2md/cli",
     "version": "1.0.0",
     "type": "module",
     "bin": {
@@ -9,7 +9,7 @@
         "start": "node index.js"
     },
     "dependencies": {
-        "@my-project/core": "workspace:*",
+        "@html2md/core": "workspace:*",
         "jsdom": "^26.0.0"
     }
 }

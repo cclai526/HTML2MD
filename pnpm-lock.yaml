@@ -10,7 +10,7 @@ importers:
 
   apps/cli:
     dependencies:
-      '@my-project/core':
+      '@html2md/core':
         specifier: workspace:*
         version: link:../../packages/core
       jsdom:
@@ -19,7 +19,7 @@ importers:
 
   apps/extension:
     dependencies:
-      '@my-project/core':
+      '@html2md/core':
         specifier: workspace:*
         version: link:../../packages/core
     devDependencies:

@@ -1,11 +1,14 @@
 {
-    "name": "html-to-md-project",
+    "name": "html-to-md",
     "private": true,
     "type": "module",
     "scripts": {
-        "build:core": "pnpm --filter @my-project/core build",
-        "build:extension": "pnpm --filter @my-project/extension build",
-        "dev:extension": "pnpm --filter @my-project/extension dev"
+        "build": "pnpm --filter @html2md/core build && pnpm --filter @html2md/extension build",
+        "build:core": "pnpm --filter @html2md/core build",
+        "build:ext": "pnpm --filter @html2md/extension build",
+        "dev:core": "pnpm --filter @html2md/core exec vite build --watch",
+        "dev:ext": "pnpm --filter @html2md/extension dev",
+        "dev": "pnpm run dev:core & pnpm run dev:ext"
     },
     "pnpm": {
         "onlyBuiltDependencies": [

@@ -1,4 +1,4 @@
-import { createConverter } from '@my-project/core';
+import { createConverter } from '@html2md/core';
 
 const convertBtn = document.getElementById('convertBtn');
 const copyBtn = document.getElementById('copyBtn');
@@ -15,22 +15,55 @@ convertBtn.addEventListener('click', async () => {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-        // 1. Get HTML from the page
-        const response = await chrome.tabs.sendMessage(tab.id, { action: 'getHTML' });
+        // Read charset override from popup
+        const charsetOverride = document.getElementById('optCharset').value.trim();
+
+        // 1. Get HTML from the page using on-demand injection
+        const injectionResults = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: (charset) => {
+                // If no charset override, the browser already decoded correctly
+                if (!charset) {
+                    const mainContent = document.querySelector('article') || document.body;
+                    return { html: mainContent.innerHTML, detectedCharset: document.characterSet };
+                }
+                // With a charset override, return the page URL so we can re-fetch
+                return { url: location.href, charset };
+            },
+            args: [charsetOverride || null]
+        });
+
+        const result = injectionResults[0].result;
+        let pageHTML;
+
+        if (result.url && result.charset) {
+            // Re-fetch the page with the correct charset
+            const refetchResults = await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                func: async (url, charset) => {
+                    const res = await fetch(url);
+                    const buf = await res.arrayBuffer();
+                    const decoded = new TextDecoder(charset).decode(buf);
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(decoded, 'text/html');
+                    const mainContent = doc.querySelector('article') || doc.body;
+                    return mainContent.innerHTML;
+                },
+                args: [result.url, result.charset]
+            });
+            pageHTML = refetchResults[0].result;
+        } else {
+            pageHTML = result.html;
+        }
 
         // 2. Build options from the popup controls
         const options = {
             gfmTables: document.getElementById('optGfm').checked,
         };
 
-        const removeValue = document.getElementById('optRemove').value.trim();
-        if (removeValue) {
-            options.removeSelectors = removeValue.split(',').map((s) => s.trim());
-        }
-
         // 3. Run the Core Algorithm
         const converter = createConverter(options);
-        const markdown = converter.turndown(response.html);
+        const markdown = converter.turndown(pageHTML);
 
         output.value = markdown;
         copyBtn.disabled = false;

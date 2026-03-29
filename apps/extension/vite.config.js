@@ -8,7 +8,6 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 popup: resolve(__dirname, 'popup.html'),
-                content: resolve(__dirname, 'src/content.js'),
             },
             output: {
                 // Chrome extensions need predictable file names (no hashes)

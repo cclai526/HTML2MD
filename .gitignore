@@ -1,2 +1,13 @@
-# npm
+# Dependencies
 node_modules/
+
+# Build outputs
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/settings.json
