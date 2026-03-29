@@ -1,0 +1,15 @@
+{
+    "name": "html-to-md-project",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build:core": "pnpm --filter @my-project/core build",
+        "build:extension": "pnpm --filter @my-project/extension build",
+        "dev:extension": "pnpm --filter @my-project/extension dev"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "esbuild"
+        ]
+    }
+}
